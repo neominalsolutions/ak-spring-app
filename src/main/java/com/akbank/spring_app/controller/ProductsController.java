@@ -9,6 +9,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+// Client isteği yanlış gönderim yaptı
+// 405 Method Not Allowed -> Yanlış HTTP metodu kullanımı
+// 415 Unsupported Media Type -> Yanlış içerik tipi kullanımı hatalarını JSON formatında dönelinm.
+// 404 Not Found
+// {"name12":"{{$randomProduct}}","price":{{$randomPrice}},"quantity":"sadsad"} 400 Bad Request
+//
+// @ControllerAdvice ile global exception handling yapılabilir.
+
+// 401 ile 403 Spring Security ile ilgilidir. -> Authentication ve Authorization hatalarıdır.
+
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductsController {
