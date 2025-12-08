@@ -13,7 +13,16 @@ import org.springframework.context.annotation.Scope;
 public class SpringAppApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext context =  SpringApplication.run(SpringAppApplication.class, args);
+
+//	 ApplicationContext context =	SpringApplication.run(SpringAppApplication.class, args);
+//	 test(context);
+
+		SpringApplication.run(SpringAppApplication.class, args);
+	}
+
+
+	public static void test(ApplicationContext context) {
+
 		String message =  context.getBean("exampleBean", String.class);
 		System.out.println(message);
 
@@ -25,7 +34,6 @@ public class SpringAppApplication {
 		// 3. Senaryo User Service içindeki methodu çağırma, Bean üzerinden başka Bean çağırma
 		UserService userService = context.getBean(UserService.class);
 		userService.handleUser();
-
 	}
 
 
