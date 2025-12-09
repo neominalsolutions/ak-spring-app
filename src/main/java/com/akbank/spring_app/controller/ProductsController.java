@@ -47,6 +47,8 @@ public class ProductsController {
                         product.getId(),
                         product.getName(),
                         product.getPrice(),
+                        product.getBrand(),
+                        product.getDescription(),
                         product.getQuantity()
                 ))
                 .toList();
@@ -82,6 +84,8 @@ public class ProductsController {
                 p2.get().getId(),
                 p2.get().getName(),
                 p2.get().getPrice(),
+                p2.get().getBrand(),
+                p2.get().getDescription(),
                 p2.get().getQuantity()
         );
 
