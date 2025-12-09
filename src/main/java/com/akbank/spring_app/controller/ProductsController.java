@@ -2,17 +2,17 @@ package com.akbank.spring_app.controller;
 
 import com.akbank.spring_app.entity.Product;
 import com.akbank.spring_app.repository.IProductRepository;
-import com.akbank.spring_app.response.ProductResponse;
-import jakarta.persistence.EntityNotFoundException;
+import com.akbank.spring_app.request.product.ProductCreateRequest;
+import com.akbank.spring_app.request.product.ProductDeleteByNameRequest;
+import com.akbank.spring_app.request.product.ProductStockInRequest;
+import com.akbank.spring_app.request.product.ProductUpdateRequest;
+import com.akbank.spring_app.response.ProductDetailResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 // Client isteği yanlış gönderim yaptı
 // 405 Method Not Allowed -> Yanlış HTTP metodu kullanımı
@@ -38,17 +38,17 @@ public class ProductsController {
 
     // api/v1/products
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getProducts() {
+    public ResponseEntity<List<ProductDetailResponse>> getProducts() {
 
 //     List<ProductResponse> response = Arrays.asList(new ProductResponse(UUID.randomUUID().toString(),"P-1", BigDecimal.valueOf(10.5),5), new ProductResponse(UUID.randomUUID().toString(),"P-2", BigDecimal.valueOf(15.5),5));
 
-        List<ProductResponse> response = productRepository.findAll().stream()
-                .map(product -> new ProductResponse(
+
+        List<ProductDetailResponse> response = productRepository.findAll().stream()
+                .map(product -> new ProductDetailResponse(
                         product.getId(),
                         product.getName(),
-                        product.getPrice(),
-                        product.getBrand(),
                         product.getDescription(),
+                        product.getPrice(),
                         product.getQuantity()
                 ))
                 .toList();
@@ -60,7 +60,7 @@ public class ProductsController {
     // @PathVariable -> Path üzerinden dinamik veri almayı sağlar. GET isteklerinde urlden hassas olmayan veriler taşınabilir.
     // api/v1/products/{id} // api/v1/products/1
     @GetMapping("{id}")
-    public ResponseEntity<ProductResponse> getProductById(@PathVariable String id) {
+    public ResponseEntity<ProductDetailResponse> getProductById(@PathVariable String id) {
 //        ProductResponse response = new ProductResponse(id,"P-1", BigDecimal.valueOf(10.5),5);
 
 //        Product p =  productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
@@ -80,12 +80,11 @@ public class ProductsController {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
 
-        ProductResponse response = new ProductResponse(
+        ProductDetailResponse response = new ProductDetailResponse(
                 p2.get().getId(),
                 p2.get().getName(),
-                p2.get().getPrice(),
-                p2.get().getBrand(),
                 p2.get().getDescription(),
+                p2.get().getPrice(),
                 p2.get().getQuantity()
         );
 
@@ -95,14 +94,14 @@ public class ProductsController {
     // @RequestBody -> İstek gövdesinden veri almayı sağlar. POST, PUT, DELETE isteklerinde kullanılır.
     // api/v1/products -> Güvenli Hassas veriler @RequestBody ile taşınır.
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductResponse request) {
+    public ResponseEntity<ProductDetailResponse> createProduct(@RequestBody ProductCreateRequest request) {
         // DB kaydetme işlemleri yapılır.
 
         Product entity = new Product();
         BeanUtils.copyProperties(request, entity);
         productRepository.save(entity);
         // Kayıt edilen entityden id yok id ve diğer bilgileri aldık dto attık. Dto olarak return ettik.
-        ProductResponse response = new ProductResponse();
+        ProductDetailResponse response = new ProductDetailResponse();
         BeanUtils.copyProperties(entity, response);
 
         return ResponseEntity.status(201).body(response); // 201 Created
@@ -110,7 +109,7 @@ public class ProductsController {
 
     // Yanış endoint tanımları -> api/v1/products/update/{id}, api/v1/createProduct // api/v1/product-delete/{id}
     @PutMapping("{id}") // Resource Update
-    public ResponseEntity<Void> updateProduct(@PathVariable String id, @RequestBody ProductResponse request) {
+    public ResponseEntity<Void> updateProduct(@PathVariable String id, @RequestBody ProductUpdateRequest request) {
 
         // parametre olarak gelen id ile request içindeki id aynı mı kontrolü yapılır.
         if(!id.equals(request.getId())){
@@ -133,8 +132,10 @@ public class ProductsController {
     }
 
     @DeleteMapping("{id}") // Resource Delete
-    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable String id, @RequestBody ProductDeleteByNameRequest request) {
         // DB silme işlemleri yapılır.
+
+        // Burada ekstra bir kontrol yapılmalalıdır.
 
         Optional<Product> product= productRepository.findById(id);
         if(product.isEmpty()){
@@ -147,7 +148,7 @@ public class ProductsController {
     }
 
     @PatchMapping("{productId}/stockIn") // Resource Partial Update
-    public ResponseEntity<Void> stockInProduct(@PathVariable String productId, @RequestBody ProductResponse request) {
+    public ResponseEntity<Void> stockInProduct(@PathVariable String productId, @RequestBody ProductStockInRequest request) {
         Optional<Product> product= productRepository.findById(productId);
 
         if(product.isEmpty()){
