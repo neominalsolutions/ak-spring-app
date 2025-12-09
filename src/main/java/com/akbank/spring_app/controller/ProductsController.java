@@ -7,7 +7,10 @@ import com.akbank.spring_app.request.product.ProductDeleteByNameRequest;
 import com.akbank.spring_app.request.product.ProductStockInRequest;
 import com.akbank.spring_app.request.product.ProductUpdateRequest;
 import com.akbank.spring_app.response.ProductDetailResponse;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +31,15 @@ import java.util.Optional;
 @RequestMapping("/api/v1/products")
 public class ProductsController {
 
+    @Autowired
+    private IProductRepository productRepository;
 
-    private final IProductRepository productRepository;
-
-    // Dependency Injection (DI) -> Inversion of Control (IoC)
-    public ProductsController(IProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+//    private final IProductRepository productRepository;
+//
+//    // Dependency Injection (DI) -> Inversion of Control (IoC)
+//    public ProductsController(IProductRepository productRepository) {
+//        this.productRepository = productRepository;
+//    }
 
     // api/v1/products
     @GetMapping
@@ -94,8 +99,10 @@ public class ProductsController {
     // @RequestBody -> İstek gövdesinden veri almayı sağlar. POST, PUT, DELETE isteklerinde kullanılır.
     // api/v1/products -> Güvenli Hassas veriler @RequestBody ile taşınır.
     @PostMapping
-    public ResponseEntity<ProductDetailResponse> createProduct(@RequestBody ProductCreateRequest request) {
+    public ResponseEntity<ProductDetailResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) throws   Exception {
         // DB kaydetme işlemleri yapılır.
+
+
 
         Product entity = new Product();
         BeanUtils.copyProperties(request, entity);
