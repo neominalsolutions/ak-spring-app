@@ -111,6 +111,22 @@ public class ProductsController {
     // Yanış endoint tanımları -> api/v1/products/update/{id}, api/v1/createProduct // api/v1/product-delete/{id}
     @PutMapping("{id}") // Resource Update
     public ResponseEntity<Void> updateProduct(@PathVariable String id, @RequestBody ProductResponse request) {
+
+        // parametre olarak gelen id ile request içindeki id aynı mı kontrolü yapılır.
+        if(!id.equals(request.getId())){
+            return ResponseEntity.badRequest().build(); // 400 Bad Request
+        }
+
+        Optional<Product> product= productRepository.findById(id);
+
+        if(product.isEmpty()){
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+
+        Product entity = product.get();
+        BeanUtils.copyProperties(request, entity);
+        productRepository.save(entity);
+
         // DB güncelleme işlemleri yapılır.
 
         return ResponseEntity.noContent().build();
@@ -119,6 +135,28 @@ public class ProductsController {
     @DeleteMapping("{id}") // Resource Delete
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         // DB silme işlemleri yapılır.
+
+        Optional<Product> product= productRepository.findById(id);
+        if(product.isEmpty()){
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+
+        productRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("{productId}/stockIn") // Resource Partial Update
+    public ResponseEntity<Void> stockInProduct(@PathVariable String productId, @RequestBody ProductResponse request) {
+        Optional<Product> product= productRepository.findById(productId);
+
+        if(product.isEmpty()){
+            return ResponseEntity.notFound().build(); // 404 Not Found
+        }
+
+        Product entity = product.get();
+        entity.setQuantity(entity.getQuantity() + request.getQuantity());
+        productRepository.save(entity);
 
         return ResponseEntity.noContent().build();
     }
