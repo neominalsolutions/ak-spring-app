@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -41,7 +42,7 @@ public class SecurityConfig {
 
     // BCryptPasswordEncoder, şifreleri güvenli bir şekilde saklamak için kullanılır
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -60,9 +61,10 @@ public class SecurityConfig {
     // api stateless çalıştığımız için csrf kapatıldı, normal web uygulamalarında açık kalmalı
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        // production ortamında h2-console kapatılmalı çünkü güvenlik açığı oluşturur ve aynı zamanda frame options disable edilmemeli
+        http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // h2-console için frame options disable
             .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(a -> {
-                a.requestMatchers("/api/v1/auth/**").permitAll(); // register login endpointelerine izin ver
+                a.requestMatchers("/api/v1/auth/**","/h2-console/**").permitAll(); // register login endpointelerine izin ver
                 a.anyRequest().authenticated(); // diğer tüm endpointler için authentication gerekli
             }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()); // stateless session yönetimi
 
