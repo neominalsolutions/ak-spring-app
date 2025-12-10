@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "63f5fe84-4bbf-4237-9de2-d19f4c2a4800",
+		"name": "src",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40527392",
+		"_collection_link": "https://www.postman.com/neominal-solutions2024/workspace/ak-spring/collection/40527392-63f5fe84-4bbf-4237-9de2-d19f4c2a4800?action=share&source=collection_link&creator=40527392"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "getProductById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/624ec770-875f-4ab4-b32b-4cab382d72d8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"624ec770-875f-4ab4-b32b-4cab382d72d8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"product_name\":null,\"unit_price\":0,\"available_quantity\":50}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\":\"08df001d-6446-4833-944d-dc19afece6f5\",\"name\":\"{{$randomProduct}}\",\"price\":{{$randomPrice}},\"quantity\":{{$randomInt}}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/08df001d-6446-4833-944d-dc19afece6f5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"08df001d-6446-4833-944d-dc19afece6f5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/08df001d-6446-4833-944d-dc19afece6f5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"08df001d-6446-4833-944d-dc19afece6f5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "stockInProduct",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\":\"624ec770-875f-4ab4-b32b-4cab382d72d8\",\"quantity\":125}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/624ec770-875f-4ab4-b32b-4cab382d72d8/stockIn",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"624ec770-875f-4ab4-b32b-4cab382d72d8",
+								"stockIn"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "addCategory",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Kategori Test100234518\",\"description\":\"{{$randomJobDescriptor}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategoryById",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{$randomNamePrefix}}\",\"description\":\"{{$randomJobDescriptor}}\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{$randomNamePrefix}}\",\"description\":\"{{$randomJobDescriptor}}\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories?id=13",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryByName",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{$randomNamePrefix}}\",\"description\":\"{{$randomJobDescriptor}}\"}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/byname?name=Dr.",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"byname"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Dr."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getCategoryByNamePagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/q?name=dr.&size=5&page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"q"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "dr."
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchProductsByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/searchProducts?productName=&categoryName=kategori1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"searchProducts"
+							],
+							"query": [
+								{
+									"key": "productName",
+									"value": ""
+								},
+								{
+									"key": "categoryName",
+									"value": "kategori1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
