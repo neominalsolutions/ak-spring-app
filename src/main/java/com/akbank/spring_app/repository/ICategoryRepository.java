@@ -2,11 +2,25 @@ package com.akbank.spring_app.repository;
 
 import com.akbank.spring_app.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+// https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
 
 @Repository
 public interface ICategoryRepository extends JpaRepository<Category, Integer> {
 
+    // Find Category by name ignoring case and order by price, küçük büyük harf duyarsız
+    // parametre değerlerini field isimleri üzerinden almaız gerekir name fieldname
+    Optional<Category> findByNameIgnoreCaseOrderByNameDesc(String name);
+
+    // Not: Tek kayıt veri çekme işlemlerinde Optional<T> kullanımı tavsiye edilir.
+    // test Test TesT -> Categoryname
+
+    @Query("SELECT c FROM Category c WHERE LOWER(c.name) = LOWER(?1)")
+    Optional<Category> findByNameCustomQuery(String name);
 
 }
 

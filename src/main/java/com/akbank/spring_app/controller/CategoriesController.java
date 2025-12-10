@@ -37,6 +37,18 @@ public class CategoriesController {
         return category.get();
     }
 
+    // api/v1/categories/byname?name=.Dr
+    @GetMapping("byname")
+    public Category getCategoryByName(@RequestParam String name) {
+        Optional<Category> category = categoryRepository.findByNameIgnoreCaseOrderByNameDesc(name);
+
+        // @Query kullanımı ile ilgili örnek
+        Optional<Category> categoryCustom = categoryRepository.findByNameCustomQuery(name);
+
+
+        return categoryCustom.get();
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
