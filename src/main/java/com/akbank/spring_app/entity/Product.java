@@ -36,4 +36,15 @@ public class Product {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(name = "category_id")
+    private Integer categoryId;
+
+    // ürünün atanımış olduğu kategori
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", insertable = false, updatable = false)
+    private Category category;
 }
+
+// Entity ilişkileri çift taraflı bidirectional olabilir isteğe bağlı tek taraflı unidirectional olabilir.
+// çift taraflı ilişkilerin kullanılmasının sebebi ekranlarda nasıl bir soru talebinde bulunacağını geliştirme yaparken kestiremeyiz . -> Category Select yapılırken category ile birlikte ilişki ürünlerin ekrana getirilmesi istenebilir. veya ürün select yapılırken ürün ile birlikte kategori bilgilerinin getirilmesi istenebilir.
