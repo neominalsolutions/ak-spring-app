@@ -5,11 +5,15 @@ import com.akbank.spring_app.entity.Category;
 import com.akbank.spring_app.entity.Product;
 import com.akbank.spring_app.repository.ICategoryRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,6 +52,23 @@ public class CategoriesController {
 
         return categoryCustom.get();
     }
+
+
+    @GetMapping("q")
+    public ResponseEntity<List<Category>> getCategoryByNamePagination(@RequestParam String name,
+                                                @RequestParam int page,
+                                                @RequestParam int size)  {
+
+        page = page -1; // sayfa numarası 0'dan başlar.
+        // size kaç adet veri çekileceği ile ilgiliner. withPage ise hangi sayfanın çekileceği ile ilgiliner.
+        Pageable pageable=  PageRequest.of(page, size, Sort.by("name").descending());
+
+        List<Category> categories = categoryRepository.findByNameContainingIgnoreCase(name,pageable);
+
+        return ResponseEntity.ok(categories);
+    }
+
+    // select c1_0.id,c1_0.name from categories c1_0 where upper(c1_0.name) like upper(?) escape '\' order by c1_0.name desc fetch first ? rows only
 
     @PostMapping
     @Transactional
