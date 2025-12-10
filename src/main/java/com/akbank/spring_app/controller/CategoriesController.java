@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+// Full Entity ile çalıştık doğru bir geliştirme değil. Dto tercih edilmelidir.
+
 @RestController
 @RequestMapping("api/v1/categories")
 public class CategoriesController {
@@ -24,6 +26,15 @@ public class CategoriesController {
 
     public CategoriesController(ICategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+    }
+
+    // Get Category by Id including Products /api/v1/categories?id=1
+    // QueryString kullandığımızda parametre isimleri opsiyonel olur route /api/v1/categories veya /api/v1/categories?id=1
+    // Eğer parametre isimleri önemli ise @PathVariable kullanılır /api/v1/categories/1
+    @GetMapping
+    public Category getCategoryById(@RequestParam Integer id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        return category.get();
     }
 
     @PostMapping
