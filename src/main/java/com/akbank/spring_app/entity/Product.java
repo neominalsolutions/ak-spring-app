@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @Table(name = "products", uniqueConstraints =
         { //other constraints
                 @UniqueConstraint(name = "UniqueBrandAndDescription", columnNames = { "brand", "description" })})
-
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

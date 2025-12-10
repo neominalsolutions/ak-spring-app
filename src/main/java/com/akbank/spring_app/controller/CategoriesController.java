@@ -3,7 +3,11 @@ package com.akbank.spring_app.controller;
 
 import com.akbank.spring_app.entity.Category;
 import com.akbank.spring_app.entity.Product;
+import com.akbank.spring_app.record.ProductSearchResult;
 import com.akbank.spring_app.repository.ICategoryRepository;
+import com.akbank.spring_app.repository.IProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +31,13 @@ public class CategoriesController {
     // ORM toollarının Persist işlemlerdeki gücü nedir?
 
     private final ICategoryRepository categoryRepository;
+    private  final IProductRepository productRepository;
+    private final ObjectMapper objectMapper;
 
-    public CategoriesController(ICategoryRepository categoryRepository) {
+    public CategoriesController(ICategoryRepository categoryRepository, IProductRepository productRepository, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     // Get Category by Id including Products /api/v1/categories?id=1
@@ -112,6 +120,18 @@ public class CategoriesController {
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
         categoryRepository.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/searchProducts")
+    public ResponseEntity<List<ProductSearchResult>> searchProductsByName(@RequestParam String productName,@RequestParam String categoryName) {
+
+      List<ProductSearchResult> response =  this.productRepository.searchProducts(productName,categoryName);
+
+        return ResponseEntity.ok(response);
+
+
+
     }
 
 
