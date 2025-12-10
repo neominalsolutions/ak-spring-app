@@ -123,14 +123,13 @@ public class CategoriesController {
     }
 
 
+    // Not: Postgres Bağlantısı gerektirir
     @GetMapping("/searchProducts")
     public ResponseEntity<List<ProductSearchResult>> searchProductsByName(@RequestParam String productName,@RequestParam String categoryName) {
 
       List<ProductSearchResult> response =  this.productRepository.searchProducts(productName,categoryName);
 
         return ResponseEntity.ok(response);
-
-
 
     }
 
