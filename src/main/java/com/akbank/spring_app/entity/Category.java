@@ -1,12 +1,14 @@
 package com.akbank.spring_app.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
 
 @Entity
 @Table(name = "categories")
+@Data
 public class Category {
 
     @Id
@@ -17,7 +19,7 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> products;
+    private List<Product> products = new java.util.ArrayList<>(); // null reference hatasını önlemek için boş liste ile başlatıyoruz.
 
     // CascadeType.ALL -> Category silindiğinde ilişkili ürünlerde silinir.
     // FetchType.LAZY -> Category yüklendiğinde ürünler hemen yüklenmez, gerektiğinde yüklenir.
