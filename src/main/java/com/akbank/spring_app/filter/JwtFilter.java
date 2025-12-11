@@ -53,9 +53,8 @@ public class JwtFilter extends OncePerRequestFilter {
                    UsernamePasswordAuthenticationToken authToken =
                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                    SecurityContextHolder.getContext().setAuthentication(authToken); // sistemde authenticated olarak kendimiz ayarlıyoruz.
-                   filterChain.doFilter(request, response);
-
                    // Burada kullanıcı bilgilerini güvenlik bağlamına ekleyebilirsiniz
+                   filterChain.doFilter(request, response);
                } else {
                    System.out.println("Token süresi dolmuş veya geçersiz.");
                    filterChain.doFilter(request, response);
@@ -63,10 +62,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
             } catch (Exception e){
                 System.out.println("Token doğrulama hatası: " + e.getMessage());
+                filterChain.doFilter(request, response);
             }
 
+        } else {
+            filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
     }
 }

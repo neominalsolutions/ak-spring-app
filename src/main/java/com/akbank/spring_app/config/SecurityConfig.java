@@ -1,5 +1,6 @@
 package com.akbank.spring_app.config;
 
+import com.akbank.spring_app.filter.AuthEntryPoint;
 import com.akbank.spring_app.filter.JwtFilter;
 import com.akbank.spring_app.repository.IUserRepository;
 import com.akbank.spring_app.service.CustomUserDetailService;
@@ -24,10 +25,12 @@ public class SecurityConfig {
 
     private final IUserRepository userRepository;
     private final JwtFilter jwtFilter;
+    private final AuthEntryPoint authEntryPoint;
 
-    public SecurityConfig(IUserRepository userRepository,JwtFilter jwtFilter) {
+    public SecurityConfig(IUserRepository userRepository,JwtFilter jwtFilter, AuthEntryPoint authEntryPoint) {
         this.userRepository = userRepository;
         this.jwtFilter = jwtFilter;
+        this.authEntryPoint = authEntryPoint;
     }
 
     // UserDetailsService, kullanıcı bilgilerini yüklemek için kullanılır
@@ -71,11 +74,15 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(a -> {
                 a.requestMatchers("/api/v1/auth/**","/h2-console/**").permitAll(); // register login endpointelerine izin ver
                 a.anyRequest().authenticated(); // diğer tüm endpointler için authentication gerekli
-            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // stateless session yönetimi
+            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
+        ; // stateless session yönetimi
 
 
         return http.build();
     }
 
+
+    // Not: Crud işlemler yaparken eğer hata varsa 403 döndürüyor bunu düzeltmek için global exception handler eklenebilir
 
 }

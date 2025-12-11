@@ -21,7 +21,7 @@ public class JwtService {
        return io.jsonwebtoken.Jwts.builder()
                .setSubject(userDetails.getUsername()) // token'ın konusu (kullanıcı adı)
                .setIssuedAt(new Date(System.currentTimeMillis())) // token oluşturulma zamanı
-              .setExpiration(new Date(System .currentTimeMillis() * 1000 * 60 * 30)) // 30 dakika geçerli
+              .setExpiration(new Date(System .currentTimeMillis() +  1000 * 60 * 30)) // 30 dakika geçerli
                .signWith(SignatureAlgorithm.HS512, Keys.hmacShaKeyFor(key.getBytes())).compact(); // token imzalama
     }
 
