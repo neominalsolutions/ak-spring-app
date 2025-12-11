@@ -1,10 +1,12 @@
 package com.akbank.spring_app.config;
 
+import com.akbank.spring_app.filter.JwtFilter;
 import com.akbank.spring_app.repository.IUserRepository;
 import com.akbank.spring_app.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,14 +17,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
     private final IUserRepository userRepository;
+    private final JwtFilter jwtFilter;
 
-    public SecurityConfig(IUserRepository userRepository) {
+    public SecurityConfig(IUserRepository userRepository,JwtFilter jwtFilter) {
         this.userRepository = userRepository;
+        this.jwtFilter = jwtFilter;
     }
 
     // UserDetailsService, kullanıcı bilgilerini yüklemek için kullanılır
@@ -66,7 +71,8 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(a -> {
                 a.requestMatchers("/api/v1/auth/**","/h2-console/**").permitAll(); // register login endpointelerine izin ver
                 a.anyRequest().authenticated(); // diğer tüm endpointler için authentication gerekli
-            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()); // stateless session yönetimi
+            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // stateless session yönetimi
+
 
         return http.build();
     }
