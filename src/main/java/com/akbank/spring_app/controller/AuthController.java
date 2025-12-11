@@ -58,8 +58,6 @@ public class AuthController {
         }
 
         String token = this.jwtService.generateToken((UserDetails)auth.getPrincipal());
-
-
         // JWT Generate  -> Return JWT Token
         return ResponseEntity.ok(new TokenResponse(token));
     }
