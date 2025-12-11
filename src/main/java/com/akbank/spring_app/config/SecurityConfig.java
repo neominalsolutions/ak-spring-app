@@ -1,15 +1,14 @@
 package com.akbank.spring_app.config;
 
-import com.akbank.spring_app.filter.AuthEntryPoint;
-import com.akbank.spring_app.filter.JwtFilter;
+import com.akbank.spring_app.filter.JwtAuthEntryPoint;
+import com.akbank.spring_app.filter.JwtAccessDeniedHandler;
+import com.akbank.spring_app.filter.JwtAuthFilter;
 import com.akbank.spring_app.repository.IUserRepository;
 import com.akbank.spring_app.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -24,13 +23,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final IUserRepository userRepository;
-    private final JwtFilter jwtFilter;
-    private final AuthEntryPoint authEntryPoint;
+    private final JwtAuthFilter jwtFilter;
+    private final JwtAuthEntryPoint authEntryPoint;
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(IUserRepository userRepository,JwtFilter jwtFilter, AuthEntryPoint authEntryPoint) {
+    public SecurityConfig(IUserRepository userRepository, JwtAuthFilter jwtFilter, JwtAuthEntryPoint authEntryPoint, JwtAccessDeniedHandler accessDeniedHandler) {
         this.userRepository = userRepository;
         this.jwtFilter = jwtFilter;
         this.authEntryPoint = authEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     // UserDetailsService, kullanıcı bilgilerini yüklemek için kullanılır
@@ -75,7 +76,10 @@ public class SecurityConfig {
                 a.requestMatchers("/api/v1/auth/**","/h2-console/**").permitAll(); // register login endpointelerine izin ver
                 a.anyRequest().authenticated(); // diğer tüm endpointler için authentication gerekli
             }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(authEntryPoint))
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(authEntryPoint);
+                    ex.accessDeniedHandler(accessDeniedHandler);
+                })
         ; // stateless session yönetimi
 
 

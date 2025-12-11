@@ -1,6 +1,7 @@
 package com.akbank.spring_app.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -33,6 +34,18 @@ public class GlobalErrorHandling {
         });
 
         return ResponseEntity.status(400).body(errors);
+    }
+
+    // Beklenmedik tüm RuntimeException'ları (500 hataları) yakalamak için
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, Object>> handleAllUncaughtException(Exception ex) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 500
+        body.put("error", "Internal Server Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
