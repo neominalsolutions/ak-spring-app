@@ -37,7 +37,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         // hatayı loglar. Ancak genellikle "Invalid Token" veya "Missing Token"
         // şeklinde genel bir mesajla yanıt verilir.
         body.put("error", "Unauthorized");
-        body.put("message", "JWT Token yok veya geçersiz: " + authException.getMessage());
+        body.put("message", "Token yok veya geçersiz: Kimlik doğrulaması yapılamıyor. " + authException.getMessage());
         body.put("path", request.getServletPath());
 
         final ObjectMapper mapper = new ObjectMapper();

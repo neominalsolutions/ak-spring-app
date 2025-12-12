@@ -1,8 +1,12 @@
 package com.akbank.spring_app.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,13 +40,29 @@ public class GlobalErrorHandling {
         return ResponseEntity.status(400).body(errors);
     }
 
+
+    // 403 - Forbidden hataları için
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.FORBIDDEN.value()); // 403
+        body.put("error", "Bu işlemi gerçekleştirmek için yetkiniz yok");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+
+    // En altta bütün uygulama gelenlinde beklemeyen hataları yakalayan yer.
+
     // Beklenmedik tüm RuntimeException'ları (500 hataları) yakalamak için
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleAllUncaughtException(Exception ex) {
 
         Map<String, Object> body = new HashMap<>();
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 500
-        body.put("error", "Internal Server Error");
+        body.put("error", "Sistemde beklenmedik bir hata oluştu");
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
