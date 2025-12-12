@@ -16,13 +16,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/products/624ec770-875f-4ab4-b32b-4cab382d72d8",
+							"raw": "{{baseUrl}}/products/624ec770-875f-4ab4-b32b-4cab382d72d876",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
-								"624ec770-875f-4ab4-b32b-4cab382d72d8"
+								"624ec770-875f-4ab4-b32b-4cab382d72d876"
 							]
 						}
 					},
@@ -57,6 +57,16 @@
 				{
 					"name": "getProducts",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -156,11 +166,21 @@
 				{
 					"name": "addCategory",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"name\":\"Kategori Test100234518\",\"description\":\"{{$randomJobDescriptor}}\"}",
+							"raw": "{\"name\":\"Kategori Test100234518sdfsaf\",\"description\":\"{{$randomJobDescriptor}}\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -237,6 +257,16 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -382,6 +412,157 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "BFF",
+			"item": [
+				{
+					"name": "Rate Limitter Token endpoint",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"test\",\"password\":\"P@ssword1\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8081/ak-spring-service/api/v1/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"ak-spring-service",
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "KeyCloak Generate Access Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "gateway-service",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "ahmet",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "P@ssword1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8180/realms/java-microservices/protocol/openid-connect/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8180",
+							"path": [
+								"realms",
+								"java-microservices",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BFF Scope Access Test",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1QUhlYVgxUGxoNURoM1dIdXJXOEpPdXl2Mk9XMkwxanlsOXBnX2RINFFZIn0.eyJleHAiOjE3NjU0ODQ4NDIsImlhdCI6MTc2NTQ4NDU0MiwianRpIjoiNWMyNGQzMmUtODAzMS00N2IyLTg1YWItNmI1MWJlNTgzYWNkIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9qYXZhLW1pY3Jvc2VydmljZXMiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiNDk0MDJlYzctNGUwNy00ZTY3LWFmZDgtOWE4Nzg2MmI4ZTRmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiZ2F0ZXdheS1zZXJ2aWNlIiwic2Vzc2lvbl9zdGF0ZSI6IjhhYjMyOWY0LTdhNjItNDlhMS04ZDY3LTQwYzlkZTRiNjAzYiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9yZGVyLXNlcnZpY2UtYWNjZXNzIiwib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiIsInByb2R1Y3Qtc2VydmljZS1hY2Nlc3MiLCJkZWZhdWx0LXJvbGVzLWphdmEtbWljcm9zZXJ2aWNlcyJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjhhYjMyOWY0LTdhNjItNDlhMS04ZDY3LTQwYzlkZTRiNjAzYiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6IkFobWV0IFRhbiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFobWV0IiwiZ2l2ZW5fbmFtZSI6IkFobWV0IiwiZmFtaWx5X25hbWUiOiJUYW4iLCJlbWFpbCI6ImFobWV0QHRlc3QuY29tIn0.joV-M_M-de6KOyxgtkH9uze7L7o3TkocILnio6d4nx8f630gg8GK4_ow_No50BLlteTYrFMQr3t0k39vGD2TKw6TGl8KGa6QH-v-jxKLR6ZX9Mh-NuJgAiXtAXgiBM_FToEhtjgx1XiT2uNNCuORtujTeTFcrCgsVqMQDc3KRNUY7rrZQGN-KD5qTRFGxOQf-Oo0NnjMwrXm2qE7SS86xnFjeG6njtT8uoh1BK_i2e62V7qD84Sjvd7dtiUZO0hbJh7C3sLFcCqR_nyd20EIR4IWmDLfZ2775D8WWJdlRliU701mvenkmauQEjj0hj3voiKWQumtki2cQXnTDkPdZw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8081/bff/api/v1",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"bff",
+								"api",
+								"v1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
