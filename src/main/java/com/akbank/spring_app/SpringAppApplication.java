@@ -1,6 +1,6 @@
 package com.akbank.spring_app;
 
-import com.akbank.spring_app.service.UserService;
+import com.akbank.spring_app.domain.service.UserService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.boot.SpringApplication;
