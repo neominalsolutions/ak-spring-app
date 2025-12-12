@@ -1,7 +1,7 @@
 package com.akbank.spring_app.filter;
 
 import com.akbank.spring_app.service.CustomUserDetailService;
-import com.akbank.spring_app.service.JwtService;
+import com.akbank.spring_app.service.JsonWebtokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -22,9 +22,9 @@ import java.util.Map;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private JwtService jwtService;
+    private JsonWebtokenService jwtService;
     private CustomUserDetailService customUserDetailService;
-    public JwtAuthFilter(JwtService jwtService, CustomUserDetailService customUserDetailService) {
+    public JwtAuthFilter(JsonWebtokenService jwtService, CustomUserDetailService customUserDetailService) {
         this.jwtService = jwtService;
         this.customUserDetailService = customUserDetailService;
 

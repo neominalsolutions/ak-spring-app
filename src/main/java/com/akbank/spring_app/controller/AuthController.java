@@ -5,16 +5,15 @@ import com.akbank.spring_app.repository.IUserRepository;
 import com.akbank.spring_app.request.auth.LoginRequest;
 import com.akbank.spring_app.request.auth.RegisterRequest;
 import com.akbank.spring_app.response.TokenResponse;
-import com.akbank.spring_app.service.JwtService;
+import com.akbank.spring_app.service.AkbankJwtService;
+import com.akbank.spring_app.service.IJwtService;
+import com.akbank.spring_app.service.JsonWebtokenService;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +27,9 @@ public class AuthController {
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private final IJwtService jwtService;
 
-    public AuthController(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthController(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, IJwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;

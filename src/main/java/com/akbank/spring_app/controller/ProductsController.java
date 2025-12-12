@@ -7,7 +7,6 @@ import com.akbank.spring_app.request.product.ProductDeleteByNameRequest;
 import com.akbank.spring_app.request.product.ProductStockInRequest;
 import com.akbank.spring_app.request.product.ProductUpdateRequest;
 import com.akbank.spring_app.response.ProductDetailResponse;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +30,15 @@ import java.util.Optional;
 @RequestMapping("/api/v1/products")
 public class ProductsController {
 
-    @Autowired
-    private IProductRepository productRepository;
 
-//    private final IProductRepository productRepository;
-//
+    // @Autowired
+   //  private IProductRepository productRepository;
+
+    private final IProductRepository productRepository;
 //    // Dependency Injection (DI) -> Inversion of Control (IoC)
-//    public ProductsController(IProductRepository productRepository) {
-//        this.productRepository = productRepository;
-//    }
+    public ProductsController(IProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     // api/v1/products
     @GetMapping

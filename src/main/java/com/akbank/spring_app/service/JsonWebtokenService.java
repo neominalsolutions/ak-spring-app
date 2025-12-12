@@ -13,7 +13,7 @@ import java.util.Date;
 // JWT Token oluşturma ve doğrulama işlemlerini gerçekleştirecek servis sınıfı
 
 @Service
-public class JwtService {
+public class JsonWebtokenService implements IJwtService {
 
     private String key = "b41d5cf12df3c302fee644c0e06fd62a9b6a9f496773806d92170ad274b164ab5e27686377545ae1e7281592758f14dbccc6eb67c067f2971999402a00f5ff2t";
 
