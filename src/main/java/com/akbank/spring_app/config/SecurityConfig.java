@@ -75,7 +75,7 @@ public class SecurityConfig {
         // production ortamında h2-console kapatılmalı çünkü güvenlik açığı oluşturur ve aynı zamanda frame options disable edilmemeli
         http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // h2-console için frame options disable
             .csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(a -> {
-                a.requestMatchers("/api/v1/auth/**","/h2-console/**").permitAll(); // register login endpointelerine izin ver
+                a.requestMatchers("/api/v1/auth/**","/h2-console/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll(); // register login endpointelerine izin ver
                 a.anyRequest().authenticated(); // diğer tüm endpointler için authentication gerekli
             }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authenticationProvider(daoAuthenticationProvider()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> {
@@ -86,6 +86,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 
     // Not: Crud işlemler yaparken eğer hata varsa 403 döndürüyor bunu düzeltmek için global exception handler eklenebilir
