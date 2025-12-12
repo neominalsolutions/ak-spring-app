@@ -6,6 +6,8 @@ import com.akbank.spring_app.request.auth.LoginRequest;
 import com.akbank.spring_app.request.auth.RegisterRequest;
 import com.akbank.spring_app.response.TokenResponse;
 import com.akbank.spring_app.service.JwtService;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Authentication Controller", description = "Handles user registration and login")
 public class AuthController {
 
     private final IUserRepository userRepository;
@@ -35,6 +38,10 @@ public class AuthController {
     }
 
     @PostMapping("register")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad Request")
+    })
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
 
         User user = new User();
